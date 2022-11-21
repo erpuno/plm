@@ -9,14 +9,14 @@ defmodule PLM.Rows.Product do
   def doc(),
     do: "PLM product."
 
-  def id(), do: ERP."Product"(code: 'NYNJA')
-  def mul({a, b}, {c, d}), do: {a + c, b * d}
+  def id(), do: ERP."Product"(id: 'NYNJA')
+  def mul({:money, a, b}, {:money, c, d}), do: {:money, a + c, b * d}
 
   def sum(feed) do
     {_, b} =
       :lists.foldl(
         fn ERP."Payment"(volume: v, price: p), {x, y} ->
-          {_, y1} = mul(v, p)
+          {:money, _, y1} = mul(v, p)
           {x, y + y1}
         end,
         {0, 0},
@@ -27,14 +27,14 @@ defmodule PLM.Rows.Product do
   end
 
   def new(name, prod, _) do
-    code = ERP."Product"(prod, :code)
-    income = ('/plm/' ++ code ++ '/income') |> sum
-    outcome = ('/plm/' ++ code ++ '/outcome') |> sum
-    feed = '/fin/acc/' ++ code
-    {:ok, ERP."Acc"(rate: {_, rnd})} = :kvs.get(feed, code ++ '/R&D')
-    {:ok, ERP."Acc"(rate: {_, ins})} = :kvs.get(feed, code ++ '/insurance')
-    {:ok, ERP."Acc"(rate: {_, opt})} = :kvs.get(feed, code ++ '/options')
-    {:ok, ERP."Acc"(rate: {_, rsv})} = :kvs.get(feed, code ++ '/reserved')
+    id = ERP."Product"(prod, :id)
+    income = ('/plm/' ++ id ++ '/income') |> sum
+    outcome = ('/plm/' ++ id ++ '/outcome') |> sum
+    feed = '/fin/acc/' ++ id
+    {:ok, ERP."Acc"(rate: {:money, _, rnd})} = :kvs.get(feed ++ '/R&D', id ++ '/R&D')
+    {:ok, ERP."Acc"(rate: {:money, _, ins})} = :kvs.get(feed ++ '/insurance', id ++ '/insurance')
+    {:ok, ERP."Acc"(rate: {:money, _, opt})} = :kvs.get(feed ++ '/options', id ++ '/options')
+    {:ok, ERP."Acc"(rate: {:money, _, rsv})} = :kvs.get(feed ++ '/reserved', id ++ '/reserved')
 
     NITRO.panel(
       id: :form.atom([:tr, name]),
@@ -42,7 +42,7 @@ defmodule PLM.Rows.Product do
       body: [
         NITRO.panel(
           class: :column6,
-          body: NITRO.link(href: 'cashflow.htm?p=' ++ code, body: code)
+          body: NITRO.link(href: 'cashflow.htm?p=' ++ id, body: id)
         ),
         NITRO.panel(
           class: :column6,
@@ -69,10 +69,10 @@ defmodule PLM.Rows.Product do
           body:
             :string.join(
               :lists.map(
-                fn ERP."Person"(cn: id, hours: h) ->
-                  id ++ '&nbsp;(' ++ :erlang.integer_to_list(h) ++ ')'
+                fn ERP."Person"(cn: cn, hours: h) ->
+                  cn ++ '&nbsp;(' ++ :erlang.integer_to_list(h) ++ ')'
                 end,
-                :kvs.all('/plm/' ++ code ++ '/staff')
+                :kvs.all('/plm/' ++ id ++ '/staff')
               ),
               ','
             )
@@ -87,7 +87,7 @@ defmodule PLM.Rows.Product do
         ),
         NITRO.panel(
           class: :column6,
-          body: NITRO.link(class: [:sgreen, :button], postback: {:invest, code}, body: "Invest")
+          body: NITRO.link(class: [:sgreen, :button], postback: {:invest, id}, body: "Invest")
         )
       ]
     )
