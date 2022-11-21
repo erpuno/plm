@@ -25,24 +25,23 @@ defmodule PLM.Mixfile do
   def application() do
     [
       mod: {PLM.Application, []},
-      applications: [:syn, :form, :nitro, :ranch, :cowboy, :rocksdb, :kvs, :erp, :bpe, :n2o, :chat]
+      applications: [:syn, :form, :schema, :dec, :nitro, :ranch, :cowboy, :rocksdb, :kvs, :bpe, :n2o]
     ]
   end
 
   def deps() do
     [
       {:ex_doc, "~> 0.20.2", only: :dev},
-      {:asn1ex, github: "vicentfg/asn1ex", only: :dev},
-      {:kvs, "~> 6.7.7"},
-      {:n2o, "~> 6.8.1"},
-      {:nitro, "~> 4.7.7"},
-      {:cowboy, "~> 2.5.0"},
-      {:rocksdb, "~> 1.2.0"},
-      {:chat, "~> 3.8.1"},
-      {:syn, "~> 1.6.3"},
-      {:erp, "~> 0.7.17"},
-      {:bpe, "~> 4.7.5"},
-      {:form, "~> 4.7.0"}
+      {:cowboy, "~> 2.9.0"},
+      {:rocksdb, "~> 1.6.0"},
+      {:syn, "2.1.0"},
+      {:dec, "~> 0.10.2"},
+      {:bpe, "~> 7.11.0"},
+      {:nitro, "~> 7.10.0"},
+      {:form, "~> 7.10.0"},
+      {:schema, "~> 3.11.2"},
+      {:kvs, "~> 9.4.8"},
+      {:n2o, "~> 9.11.1"}
     ]
   end
 end

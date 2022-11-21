@@ -1,48 +1,49 @@
 defmodule PLM.CashFlow do
-  use N2O, with: [:n2o, :kvs, :nitro]
-  use FORM, with: [:form]
+  require N2O
+  require NITRO
+  require FORM
   require BPE
   require ERP
   require Logger
 
   def investmentsHeader() do
-    panel(
+    NITRO.panel(
       id: :header,
       class: :th,
       body: [
-        panel(class: :column33, body: "Investment"),
-        panel(class: :column10, body: "Paid"),
-        panel(class: :column2, body: "Name")
+        NITRO.panel(class: :column33, body: "Investment"),
+        NITRO.panel(class: :column10, body: "Paid"),
+        NITRO.panel(class: :column2, body: "Name")
       ]
     )
   end
 
   def incomeHeader() do
-    panel(
+    NITRO.panel(
       id: :header,
       class: :th,
       body: [
-        panel(class: :column66, body: "Monthly Invoice"),
-        panel(class: :column10, body: "Amount"),
-        panel(class: :column10, body: "From")
+        NITRO.panel(class: :column66, body: "Monthly Invoice"),
+        NITRO.panel(class: :column10, body: "Amount"),
+        NITRO.panel(class: :column10, body: "From")
       ]
     )
   end
 
   def outcomeHeader() do
-    panel(
+    NITRO.panel(
       id: :header,
       class: :th,
       body: [
-        panel(class: :column66, body: "Subaccount"),
-        panel(class: :column10, body: "Amount"),
-        panel(class: :column10, body: "From")
+        NITRO.panel(class: :column66, body: "Subaccount"),
+        NITRO.panel(class: :column10, body: "Amount"),
+        NITRO.panel(class: :column10, body: "From")
       ]
     )
   end
 
   def pushInvestments(code) do
-    for i <- KVS.feed('/plm/' ++ code ++ '/staff') do
+    for i <- :kvs.feed('/plm/' ++ code ++ '/staff') do
       cn = ERP."Person"(i, :cn)
 
       sum =
@@ -52,14 +53,15 @@ defmodule PLM.CashFlow do
             {x, acc + y}
           end,
           {0, 0},
-          KVS.feed('/fin/tx/' ++ cn ++ '/local')
+          :kvs.feed('/fin/tx/' ++ cn ++ '/local')
         )
 
-      NITRO.insert_bottom(
+      :nitro.insert_bottom(
         :investmentsRow,
         PLM.Rows.Investment.new(
-          FORM.atom([:row, :investment, code]),
-          ERP."Payment"(price: {0, 1}, volume: sum, from: cn)
+          :form.atom([:row, :investment, code]),
+          ERP."Payment"(price: {0, 1}, volume: sum, from: cn),
+          []
         )
       )
     end
@@ -68,10 +70,10 @@ defmodule PLM.CashFlow do
   end
 
   def pushIncome(code) do
-    for i <- KVS.feed('/plm/' ++ code ++ '/income') do
-      NITRO.insert_bottom(
+    for i <- :kvs.feed('/plm/' ++ code ++ '/income') do
+      :nitro.insert_bottom(
         :incomeRow,
-        PLM.Rows.Payment.new(FORM.atom([:row, :income, code]), i)
+        PLM.Rows.Payment.new(:form.atom([:row, :income, code]), i, [])
       )
     end
 
@@ -79,10 +81,10 @@ defmodule PLM.CashFlow do
   end
 
   def pushOutcome(code) do
-    for i <- KVS.feed('/plm/' ++ code ++ '/outcome') do
-      NITRO.insert_bottom(
+    for i <- :kvs.feed('/plm/' ++ code ++ '/outcome') do
+      :nitro.insert_bottom(
         :outcomeRow,
-        PLM.Rows.Payment.new(FORM.atom([:row, :outcome, code]), i)
+        PLM.Rows.Payment.new(:form.atom([:row, :outcome, code]), i, [])
       )
     end
 
@@ -90,24 +92,24 @@ defmodule PLM.CashFlow do
   end
 
   def event(:init) do
-    NITRO.clear(:investmentsHead)
-    NITRO.clear(:investmentsRow)
-    NITRO.clear(:incomeHead)
-    NITRO.clear(:incomeRow)
-    NITRO.clear(:outcomeHead)
-    NITRO.clear(:outcomeRow)
-    NITRO.insert_top(:investmentsHead, PLM.CashFlow.investmentsHeader())
-    NITRO.insert_top(:outcomeHead, PLM.CashFlow.outcomeHeader())
-    NITRO.insert_top(:incomeHead, PLM.CashFlow.incomeHeader())
-    NITRO.clear(:frms)
-    NITRO.clear(:ctrl)
+    :nitro.clear(:investmentsHead)
+    :nitro.clear(:investmentsRow)
+    :nitro.clear(:incomeHead)
+    :nitro.clear(:incomeRow)
+    :nitro.clear(:outcomeHead)
+    :nitro.clear(:outcomeRow)
+    :nitro.insert_top(:investmentsHead, PLM.CashFlow.investmentsHeader())
+    :nitro.insert_top(:outcomeHead, PLM.CashFlow.outcomeHeader())
+    :nitro.insert_top(:incomeHead, PLM.CashFlow.incomeHeader())
+    :nitro.clear(:frms)
+    :nitro.clear(:ctrl)
 
     mod = BPE.Forms.Create
-    NITRO.insert_bottom(:frms, FORM.new(mod.new(mod, mod.id()), mod.id()))
+    :nitro.insert_bottom(:frms, :form.new(mod.new(mod, mod.id(), []), mod.id(), []))
 
-    NITRO.insert_bottom(
+    :nitro.insert_bottom(
       :ctrl,
-      link(
+      NITRO.link(
         id: :create_investment,
         body: "New Investment",
         postback: :create_investment,
@@ -115,9 +117,9 @@ defmodule PLM.CashFlow do
       )
     )
 
-    NITRO.insert_bottom(
+    :nitro.insert_bottom(
       :ctrl,
-      link(
+      NITRO.link(
         id: :create_income,
         body: "New Income",
         postback: :create_income,
@@ -125,9 +127,9 @@ defmodule PLM.CashFlow do
       )
     )
 
-    NITRO.insert_bottom(
+    :nitro.insert_bottom(
       :ctrl,
-      link(
+      NITRO.link(
         id: :create_outcome,
         body: "New Outcome",
         postback: :create_outcome,
@@ -135,24 +137,24 @@ defmodule PLM.CashFlow do
       )
     )
 
-    NITRO.hide(:frms)
+    :nitro.hide(:frms)
 
-    code = :p |> NITRO.qc() |> NITRO.to_list() |> pushInvestments |> pushIncome |> pushOutcome
+    code = :p |> :nitro.qc() |> :nitro.to_list() |> pushInvestments |> pushIncome |> pushOutcome
 
-    case KVS.get(:writer, '/plm/' ++ code ++ '/income') do
+    case :kvs.get(:writer, '/plm/' ++ code ++ '/income') do
       {:error, _} ->
         PLM.box(PLM.Forms.Error, {:error, 1, "No product found.", []})
 
       _ ->
-        NITRO.update(:n, code)
-        NITRO.update(:num, code)
+        :nitro.update(:n, code)
+        :nitro.update(:num, code)
     end
   end
 
-  def event(:create_investment), do: [NITRO.hide(:ctrl), NITRO.show(:frms)]
-  def event(:create_income), do: [NITRO.hide(:ctrl), NITRO.show(:frms)]
-  def event(:create_outcome), do: [NITRO.hide(:ctrl), NITRO.show(:frms)]
-  def event({:discard, []}), do: [NITRO.hide(:frms), NITRO.show(:ctrl)]
+  def event(:create_investment), do: [:nitro.hide(:ctrl), :nitro.show(:frms)]
+  def event(:create_income), do: [:nitro.hide(:ctrl), :nitro.show(:frms)]
+  def event(:create_outcome), do: [:nitro.hide(:ctrl), :nitro.show(:frms)]
+  def event({:discard, []}), do: [:nitro.hide(:frms), :nitro.show(:ctrl)]
 
   def event(_), do: []
 end

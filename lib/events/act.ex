@@ -1,37 +1,38 @@
 defmodule BPE.Actor do
-  use N2O, with: [:n2o, :kvs, :nitro]
-  use FORM, with: [:form]
+  require N2O
+  require NITRO
+  require FORM
   require BPE
   require Logger
 
   def header() do
-    panel(
+    NITRO.panel(
       id: :header,
       class: :th,
       body: [
-        panel(class: :column6, body: "State"),
-        panel(class: :column6, body: "Documents")
+        NITRO.panel(class: :column6, body: "State"),
+        NITRO.panel(class: :column6, body: "Documents")
       ]
     )
   end
 
   def ok(id) do
-    NITRO.insert_top(:tableHead, BPE.Actor.header())
+    :nitro.insert_top(:tableHead, BPE.Actor.header())
 
     for i <- :bpe.hist(id) do
-      NITRO.insert_bottom(
+      :nitro.insert_bottom(
         :tableRow,
-        BPE.Rows.Trace.new(FORM.atom([:trace, NITRO.to_list(BPE.hist(i, :id))]), i)
+        BPE.Rows.Trace.new(:nitro.atom([:trace, :nitro.to_list(BPE.hist(i, :id))]), i, [])
       )
     end
   end
 
   def event(:init) do
-    id = :p |> NITRO.qc() |> NITRO.to_list()
-    NITRO.update(:num, id)
-    NITRO.update(:n, id)
+    id = :p |> :nitro.qc() |> :nitro.to_list()
+    :nitro.update(:num, id)
+    :nitro.update(:n, id)
 
-    case N2O.user() do
+    case :n2o.user() do
       [] ->
         PLM.box(
           PLM.Forms.Error,
@@ -46,15 +47,15 @@ defmodule BPE.Actor do
   end
 
   def event({:txs, id}) do
-    NITRO.clear(:tableHead)
-    NITRO.clear(:tableRow)
+    :nitro.clear(:tableHead)
+    :nitro.clear(:tableRow)
 
-    case KVS.get('/bpe/proc', id) do
+    case :kvs.get('/bpe/proc', id) do
       {:error, _} -> PLM.box(PLM.Forms.Error, {:error, 2, "No process found.", []})
       {:ok, BPE.process(id: id)} -> ok(id)
     end
   end
 
-  def event({:off, _}), do: NITRO.redirect("bpe.htm")
+  def event({:off, _}), do: :nitro.redirect("bpe.htm")
   def event(_), do: []
 end

@@ -1,6 +1,7 @@
 defmodule PLM.Rows.Product do
-  use N2O, with: [:n2o, :nitro]
-  use FORM, with: [:form]
+  require N2O
+  require FORM
+  require NITRO
   require ERP
   require Logger
   require Record
@@ -25,7 +26,7 @@ defmodule PLM.Rows.Product do
     b
   end
 
-  def new(name, prod) do
+  def new(name, prod, _) do
     code = ERP."Product"(prod, :code)
     income = ('/plm/' ++ code ++ '/income') |> sum
     outcome = ('/plm/' ++ code ++ '/outcome') |> sum
@@ -35,35 +36,35 @@ defmodule PLM.Rows.Product do
     {:ok, ERP."Acc"(rate: {_, opt})} = :kvs.get(feed, code ++ '/options')
     {:ok, ERP."Acc"(rate: {_, rsv})} = :kvs.get(feed, code ++ '/reserved')
 
-    panel(
-      id: FORM.atom([:tr, name]),
+    NITRO.panel(
+      id: :form.atom([:tr, name]),
       class: :td,
       body: [
-        panel(
+        NITRO.panel(
           class: :column6,
-          body: link(href: 'cashflow.htm?p=' ++ code, body: code)
+          body: NITRO.link(href: 'cashflow.htm?p=' ++ code, body: code)
         ),
-        panel(
+        NITRO.panel(
           class: :column6,
           body:
             "Total Income: " <>
-              NITRO.to_binary(income) <>
+              :nitro.to_binary(income) <>
               "<br>" <>
               "Gross Profit: " <>
-              NITRO.to_binary(income - outcome) <>
+              :nitro.to_binary(income - outcome) <>
               "<br>" <>
               "R&D: " <>
-              NITRO.to_binary(rnd) <>
+              :nitro.to_binary(rnd) <>
               "%<br>" <>
               "options: " <>
-              NITRO.to_binary(opt) <>
+              :nitro.to_binary(opt) <>
               "%<br>" <>
               "reserved: " <>
-              NITRO.to_binary(rsv) <>
+              :nitro.to_binary(rsv) <>
               "%<br>" <>
-              "credited: " <> NITRO.to_binary(ins) <> "%<br>"
+              "credited: " <> :nitro.to_binary(ins) <> "%<br>"
         ),
-        panel(
+        NITRO.panel(
           class: :column20,
           body:
             :string.join(
@@ -76,17 +77,17 @@ defmodule PLM.Rows.Product do
               ','
             )
         ),
-        panel(
+        NITRO.panel(
           class: :column30,
           body:
-            panel(
+            NITRO.panel(
               class: :chart,
-              body: "<canvas heigh=100 id=\"" <> NITRO.to_binary(name) <> "\"></canvas>"
+              body: "<canvas heigh=100 id=\"" <> :nitro.to_binary(name) <> "\"></canvas>"
             )
         ),
-        panel(
+        NITRO.panel(
           class: :column6,
-          body: link(class: [:sgreen, :button], postback: {:invest, code}, body: "Invest")
+          body: NITRO.link(class: [:sgreen, :button], postback: {:invest, code}, body: "Invest")
         )
       ]
     )

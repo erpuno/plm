@@ -1,33 +1,9 @@
-@font-face {
-    font-family: 'local';
-    font-weight: normal;
-    font-style: normal;
-    src: url('https://tonpa.guru/Geometria-Light.otf');
-}
-
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-body {
-    background-color: white;
-    font-family: 'local', sans-serif;
-    font-size: 16px;
-}
+@font-face { font-family: 'local'; font-weight: normal; font-style: normal; src: url('https://tonpa.guru/Geometria-Light.otf'); }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background-color: white; font-family: 'local', sans-serif; font-size: 16px; }
 hr { margin-top: 10px; margin-bottom: 10px; }
-
-h1, h2, h3, h4 {
-    font-weight: normal;
-}
-
-nav {
-    margin: 10px 0;
-    display: none;
-    flex-direction: column;
-    align-items: center;
-}
+h1, h2, h3, h4 { font-weight: normal; }
+nav { margin: 10px 0; display: none; flex-direction: column; align-items: center; }
 
 nav a {
     font-size: 16px;
@@ -49,7 +25,6 @@ nav a:hover {
     border-bottom: 2px solid #00b8cf;
 }
 
-
 header {
     text-align: center;
     background-color: white;
@@ -67,12 +42,12 @@ header h1 {
 }
 
 aside {
+    padding-top: 20px;
     background-color: white;
-    padding: 20px 0 60px;
+    padding-bottom: -20px;
 }
 
 aside section {
-    padding: 0 20px;
     max-width: 600px;
     margin: auto;
 }
@@ -81,7 +56,7 @@ aside h3 {
     font-size: 28px;
     text-transform: uppercase;
     color: CadetBlue;
-    padding: 20px 0 10px;
+    padding: 20px 0 20px;
 }
 
 aside div {
@@ -98,8 +73,6 @@ aside a {
     color: CadetBlue;
 }
 
-.td .table { font-size: 10pt; }
-
 aside a:visited {
     color: CadetBlue;
 }
@@ -108,18 +81,16 @@ aside a:hover {
     background: rgba(255, 255, 255, 0.3);
 }
 
-main { }
+main {  padding-top: -20px; margin-top: -50px;}
 
-main section {
-    padding: 20px 0px 20px 0px;
-}
+main section { margin-top: 20px; }
 
 main h3 {
     line-height: 1.2;
-    font-size: 20px;
-    margin: 0px;
+    font-size: 32px;
+    margin: 20px;
     border-left: 2px solid #00b8cf;
-    padding-left:   20px;
+    padding-left: 20px;
     max-width: 850px;
 }
 
@@ -260,25 +231,25 @@ li { list-style-position: inside; }
     }
 
     main section {
-        padding-top: 0px;
+        padding-top: 20px;
     }
 
     main h3 {
-        font-size: 22px;
-        margin: 10px auto;
+        font-size: 36px;
+        margin: 40px auto;
     }
 
     main h4 {
         font-size: 24px;
-        margin: 10px auto;
+        margin: 0px auto;
     }
 
     main p {
-        margin: 10px auto;
+        margin: 20px auto;
     }
 
     main ul {
-        margin: 10px auto;
+        margin: 20px auto;
     }
 
     figcaption {
@@ -305,23 +276,28 @@ li { list-style-position: inside; }
 
     header h1 {
         font-size: 70px;
-        margin: 10px 0 150px;
+        margin: 100px 0 150px;
     }
 
     aside {
         text-align: center;
-        padding-bottom: 0px;
+//        padding-bottom: 100px;
     }
 
     aside section {
-        min-width: 700px;
-        vertical-align: middle;
         display: inline-block;
+        vertical-align: top;
         text-align: left;
         font-size: 20px; // BIG
     }
 
+    aside section:first-child {
+        max-width: 650px;
+        font-size: 22px;
+    }
+
     main {
+        text-align: center;
         background: white;
     }
 
@@ -333,8 +309,12 @@ li { list-style-position: inside; }
         margin-right: auto;
     }
 
+    main section:first-child {
+//        padding-top: 100px;
+    }
+
     main h3 {
-        font-size: 25px;
+        font-size: 44px;
     }
 
     figure img {

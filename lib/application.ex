@@ -1,10 +1,9 @@
 defmodule PLM do
-  use N2O, with: [:nitro]
-  use FORM
-  def extract(name, path, form), do: [name, path, form] |> FORM.atom() |> NITRO.q() |> NITRO.to_list()
+  require N2O
+  require FORM
 
   def box(mod, r) do
-    NITRO.clear(:stand)
+    :nitro.clear(:stand)
 
     rec =
       case r do
@@ -12,20 +11,7 @@ defmodule PLM do
         x -> x
       end
 
-    NITRO.insert_bottom(:stand, FORM.new(mod.new(mod, rec), rec))
-  end
-
-  def auth(cn, branch) do
-    case :kvs.get(:PersonCN, cn) do
-      {:ok, {:PersonCN, _, acc}} ->
-        case :kvs.get(branch, acc) do
-          {:ok, p} -> {:ok, p}
-          x -> x
-        end
-
-      x ->
-        x
-    end
+    :nitro.insert_bottom(:stand, :form.new(mod.new(mod, rec, []), rec, []))
   end
 end
 
@@ -33,8 +19,8 @@ defmodule PLM.Application do
   use Application
 
   def start(_, _) do
-    :cowboy.start_tls(:http, :n2o_cowboy.env(:plm), %{env: %{dispatch: :n2o_cowboy2.points()}})
-    :n2o.start_ws()
+    :cowboy.start_clear(:http, [{:port, :application.get_env(:n2o, :port, 8043)}],
+                                       %{env: %{dispatch: :n2o_cowboy.points()}})
     Supervisor.start_link([], strategy: :one_for_one, name: PLM.Supervisor)
   end
 end

@@ -2,19 +2,18 @@ use Mix.Config
 
 config :n2o,
   pickler: :n2o_secret,
+  app: :plm,
   mq: :n2o_syn,
   port: 8043,
   ttl: 60*3,
-  proto: CHAT.Server,
-  nitro_prolongate: true,
-  mqtt_services: [:erp, :plm],
-  ws_services: [:chat],
+  mqtt_services: [],
+  ws_services: [],
   upload: "./priv/static",
-  protocols: [:n2o_heart, :n2o_nitro, CHAT.TXT, :n2o_ftp],
+  protocols: [:n2o_heart, :nitro_n2o, :n2o_ftp],
   routes: PLM.Routes
 
-config :erp,
-  boot: [:erp_boot, :plm_boot, :acc_boot, :pay_boot, :fin_boot]
+config :schema,
+  boot:  [:erp_boot, :acc_boot, :pay_boot, :plm_boot]
 
 config :kvs,
   dba: :kvs_rocks,
@@ -23,8 +22,8 @@ config :kvs,
 
 config :form,
   registry: [
-    LDAP.Forms.Credentials,
     LDAP.Forms.Access,
+    BPE.Pass,
     BPE.Forms.Create,
     BPE.Rows.Trace,
     BPE.Rows.Process,

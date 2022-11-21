@@ -1,36 +1,38 @@
 defmodule LDAP.Index do
-  use N2O, with: [:n2o, :nitro]
-  use FORM
+  require FORM
   require ERP
-  require Logger
+
+  def findByPhone(phone, list) do
+      :lists.foldl(fn x, acc ->
+         case ERP."Employee"(x, :phone) == phone do
+              true -> [x|acc]
+              false -> acc
+         end
+      end, [], list)
+  end
 
   def event(:init) do
-    case N2O.user() do
-      [] -> event({:off, []})
-      _ -> event(:on)
-    end
+      :nitro.clear(:stand)
+      mod = BPE.Pass
+      form = mod.new(mod, mod.id(), [])
+      html = :form.new(form, mod.id(), [])
+      :nitro.insert_bottom(:stand, html)
   end
 
-  def event({:auth, form}) do
-    cn = PLM.extract(:cn, :otp, form)
-    branch = PLM.extract(:branch, :otp, form)
-
-    case PLM.auth(cn, branch) do
-      {:ok, p} ->
-        N2O.user(p)
-        NITRO.redirect("fin.htm")
-
-      {:error, _} ->
-        PLM.box(
-          PLM.Forms.Error,
-          {:error, 1, "The user cannot be found in this branch.", []}
-        )
-    end
+  def event({:"Next",_}) do
+      phone = :nitro.q(:number_phone_none)
+      clients = :kvs.all '/plm/employees'
+      res = findByPhone(phone, clients)
+      case res do
+          [x] -> case :nitro.to_binary(ERP."Employee"(x, :type)) do
+                        "admin" -> :nitro.redirect("backoffice/domains.htm")
+                        "consumer" -> :nitro.redirect("consumer/service.htm")
+                 end
+          _ -> :nitro.redirect("index.html")
+      end
   end
+  def event({:"Close",_}), do: :nitro.redirect("index.html")
+  def event(_), do: :ok
 
-  def event({:close, _}), do: NITRO.redirect("kvs.htm")
-  def event({:revoke, x}), do: [N2O.user([]), event({:off, x})]
-  def event(:on), do: PLM.box(LDAP.Forms.Access, [])
-  def event({:off, _}), do: PLM.box(LDAP.Forms.Credentials, [])
-  def event(_), do: []
 end
+

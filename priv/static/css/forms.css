@@ -14,7 +14,7 @@ ul,li { margin-left: -7px; }
 .detailBox { width: 130px; height: 130px; text-align: center;}
 .detailBox img { height: 57px; }
 .detailBox { cursor: pointer; }
-.detailBox a { text-decoration: none; color: #316911; outline: none;}
+.detailBox a { text-decoration: none; color: #5b59da; outline: none;}
 
 /*TEXT*/
 .center {text-align: center;}
@@ -23,29 +23,32 @@ ul,li { margin-left: -7px; }
 .rate .small { font-size: 10px; }
 
 /* MENU */
-.item { background-color: #e6f5bf; color: #666; float:left; min-width:186px; width:23%; text-align: center; }
+.item { background-color: #bfc7f5; color: #666; float:left; min-width:186px; width:23%; text-align: center; }
 .item a { text-decoration: none; display: block; color: inherit; padding: 7px 7px 7px 7px; }
 .item a:hover { background-color: #f0f0f0; }
-.item.active { padding: 7px 7px 7px 7px; background-color: #5ca135; color: #f0f0f0; }
-.submenu { background-color: #5ca135; color: #f0f0f0; padding: 5px; }
+.item.active { padding: 7px 7px 7px 7px; background-color: #8762dd; color: #f0f0f0; }
+.submenu { background-color: #615bcd; color: #f0f0f0; padding: 5px; }
 .submenu .item { min-width: 100px; color: #f0f0f0; background-color: inherit; width: auto; margin-right: 3px; }
 .submenu .item a:hover { border-radius: 5px; color: #666; background-color: #f0f0f0; }
-.submenu .item.active { border-radius: 5px; color: #666; background-color: #e6f5bf; }
+.submenu .item.active { border-radius: 5px; color: #666; background-color: #c0bff5; }
 
 /*Under menu*/
 .section { background-color: #f0f0f0; border-top: 1px solid #e4e4e4; }
-.section .column33, .section .column67 { display: table; height: 60px; }
-.section .column, .section .column6, .section .column2 { float: none; display: table-cell; vertical-align: middle; min-width: 100px; text-align: center; }
+.section .column33, .section .column67 {
+    display: table; height: 60px;
+}
+.section .column, .section .column6, .section .column2 {
+    float: none; display: table-cell; vertical-align: middle; min-width: 100px; text-align: center;
+}
 .contribution { padding: 0 10px 10px; }
 .contribution p { padding-left: 10px;  margin-top: -10px; }
 .contribution ul { margin-top:-10px; margin-bottom:5px;}
-
 /*FORMS*/
 .field { float:left; width:58.3%; text-align:left; padding: 1px;}
 .tool { float:left; width:8.33%; text-align:center; padding:0 2px; margin: 5px -25px 0 10px; }
 .label{ width: 33.33%; float:left; padding: 0 10px; text-align: right; }
 .label.large { padding-top: 1px }
-.form { width: 100%; background-color: #e6f5bf; display: inline-block; padding: 10px; }
+.form { width: 100%; background-color: #c5bff5; display: inline-block; padding: 10px; }
 .form .box { padding: 10px 0 0; }
 .caption { text-align: left; }
 .caption .small { text-align: left; margin-top: -10px;font-weight: normal;}
@@ -76,11 +79,10 @@ input[type="radio"], input[type="checkbox"] { width: auto; }
 
 /*Buttons*/
 .buttons { width: 100%; float:left; margin: 10px 0 20px; text-align:center; }
-.sgreen {  cursor: pointer; background-color: #5ca135; }
-.sgreen:hover { background-image: linear-gradient(to top, green, #5ca135); }
-.sgreen:active { background-image: linear-gradient(to top, #5ca135, green); }
+.sgreen {  cursor: pointer; background-color: #4e35a1; }
+.sgreen:hover { background-image: linear-gradient(to top, rgb(0, 2, 128), #353ea1); }
+.sgreen:active { background-image: linear-gradient(to top, #3545a1, rgb(4, 0, 128)); }
 .button {
-    margin: 0 5px;
     min-width: 65px;
     display: inline-block;
     text-decoration:none;
@@ -92,7 +94,7 @@ input[type="radio"], input[type="checkbox"] { width: auto; }
 .more { color: #333; border: 1px solid #333; }
 .more:hover{ background-image: linear-gradient(to top, #e6e6e6, #ddd); }
 .cancel {
-    margin: 0 5px;
+    margin: 0 10px;
     display: inline-block;
     background-image: linear-gradient(to top, #ddd, #e6e6e6);
     text-decoration:none;
@@ -109,32 +111,27 @@ input[type="radio"], input[type="checkbox"] { width: auto; }
 .detailsTable > div { background-color: #fff; padding: 3px 0; border: 1px solid #333; border-bottom: none; }
 .detailsTable > div:last-child { border-bottom: 1px solid #333; }
 .table { display: table; width: 100%; }
-.table > div.trGroup { vertical-align: middle; display: table-row-group; background-color: #fff;}
-.th, .td { display: table-row; text-align: center; font-size: 1.2em; }
-.th { background-color: #5ca135; color: #f0f0f0; font-weight: bold; }
+.table > div.trGroup {display: table-row-group; background-color: #fff;}
+.th, .td { display: table-row; text-align: top; font-size: 1.2em; padding: 5px; }
+.th { background-color: #7779e0; color: #f0f0f0; font-weight: bold; padding: 5px; }
 .td { background-color: inherit; color: #333; }
-.table .column2,
-.table .column66,
-.table .column33,
-.table .column14,
-.table .column12,
-.table .column10,
-.table .column20,
-.table .column6,
-.table .column3  {
-    float: none; display: table-cell; vertical-align: middle; padding: 5px;
-    border: 1px solid #f0f0f0;
+.table .column14, .table .column12, .table .column10, .table .column20, .table .column6, .table .column3  {
+    float: none; display: table-cell; vertical-align: middle; padding: 10px 3px; border-bottom: 1px solid #f0f0f0; border-right: 1px solid #f0f0f0;
 }
 .box p { padding-bottom: 10px; }
-.table p { }
+.table p { margin: 0;}
 .td:hover { background-color: #F0FFF0;}
 #operations .td:hover { background-color: rgba(255, 255, 255, 0.37) !important;}
 #operations .td.old:hover { background-color: rgba(0, 145, 0, 0.1) !important;}
 
 /*Adaptive*/
-@media (max-width: 1140px) { .app { margin: 0; max-width: 100%; } }
-@media print { #logo, .item, #backtodeplist, .buttons { display: none; }
-               .table { border: 1px solid #ccc; } }
+@media (max-width: 1140px) {
+    .app { margin: 0; max-width: 100%; }
+}
+@media print {
+    #logo, .item, #backtodeplist, .buttons { display: none; }
+    .table { border: 1px solid #ccc; }
+}
 
 /* Tooltips */
 a.tooltips {
@@ -182,7 +179,7 @@ a:hover.tooltips span {
     min-width: 500px;
     min-height: 100px;
     border-radius: 5px;
-    border: 1px #5CA135 solid;
+    border: 1px #3550a1 solid;
     background: #fff;
     box-shadow: 0 0 10px rgba(0,0,0,0.5);
     position: fixed;

@@ -1,7 +1,8 @@
 defmodule BPE.Rows.Process do
-  use N2O, with: [:n2o, :nitro]
-  use FORM, with: [:form]
-  use BPE
+  require NITRO
+  require N2O
+  require FORM
+  require BPE
   require ERP
   require Logger
   require Record
@@ -11,65 +12,60 @@ defmodule BPE.Rows.Process do
       "This is the actor table row representation in FORM CSS. Used to draw active processes" <>
         " in <a href=\"bpe.htm\">BPE process table</a> but displayed as class=form."
 
-  def id(), do: process()
+  def id(), do: BPE.process()
 
-  def new(name, proc) do
-    pid = process(proc, :id)
+  def new(name, proc, _) do
+    pid = BPE.process(proc, :id)
 
-    panel(
-      id: FORM.atom([:tr, name]),
+    NITRO.panel(
+      id: :form.atom([:tr, name]),
       class: :td,
       body: [
-        panel(
+        NITRO.panel(
           class: :column6,
           body:
-            link(
-              href: "act.htm?p=" <> NITRO.to_binary(pid),
-              body: NITRO.to_binary(pid)
+            NITRO.link(
+              href: "act.htm?p=" <> :nitro.to_binary(pid),
+              body: :nitro.to_binary(pid)
             )
         ),
-        panel(
+        NITRO.panel(
           class: :column6,
           body:
-            case process(proc, :name) do
+            case BPE.process(proc, :name) do
               [] -> []
               ERP."Employee"(person: ERP."Person"(cn: cn)) -> cn
+              name -> :nitro.to_binary name
             end
         ),
-        panel(
+        NITRO.panel(
           class: :column6,
-          body: NITRO.to_list(task(BPE.step(process(proc, :task), proc), :module))
+          body: :nitro.to_list(BPE.process(proc, :module))
         ),
-        panel(
+        NITRO.panel(
           class: :column20,
           body:
-            case BPE.head(pid) do
+            case :bpe.head(pid) do
               [] -> []
-              x -> NITRO.to_list(:erlang.element(2, hist(x, :task)))
+              x = BPE.sequenceFlow() -> BPE.sequenceFlow(BPE.hist(x, :task), :target)
+              x -> :nitro.compact(x)
             end
         ),
-        panel(
+        NITRO.panel(
           class: :column20,
-          body:
-            :string.join(
-              :lists.map(
-                fn x -> NITRO.to_list([:erlang.element(1, x)]) end,
-                task(BPE.step(process(proc, :task), proc), :prompt)
-              ),
-              ', '
-            )
+          body: :nitro.to_list(BPE.process(proc, :module))
         ),
-        panel(
+        NITRO.panel(
           class: :column10,
           body:
-            case process(proc, :task) do
+            case BPE.process(proc, :current) do
               :Final ->
                 []
 
               _ ->
                 [
-                  link(
-                    postback: {:complete, process(proc, :id)},
+                  NITRO.link(
+                    postback: {:complete, BPE.process(proc, :id)},
                     class: [:button, :sgreen],
                     body: "Go",
                     source: [],

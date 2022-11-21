@@ -1,9 +1,10 @@
 defmodule FIN.Rows.Account do
-  use N2O, with: [:n2o, :kvs, :nitro]
-  use FORM, with: [:form]
-  use BPE
-  require Record
+  require N2O
+  require FORM
+  require NITRO
+  require BPE
   require ERP
+  require Record
   require Logger
 
   def doc(),
@@ -13,8 +14,8 @@ defmodule FIN.Rows.Account do
 
   def id(), do: ERP."Acc"(id: 'Anon/local', ballance: {0, 1})
 
-  def new(name, ERP."Acc"(id: acc, ballance: p, rate: v, type: type)) do
-    [h,t] = :string.tokens(acc, '/')
+  def new(name, ERP."Acc"(id: acc, ballance: p, rate: v, type: type), _) do
+    [_,t] = :string.tokens(acc, '/')
     {s, m} = :dec.mul(p, v)
 
     x =
@@ -24,19 +25,19 @@ defmodule FIN.Rows.Account do
         _ -> 2
       end
 
-    panel(
-      id: FORM.atom([:tr, NITRO.to_list(name)]),
+    NITRO.panel(
+      id: :form.atom([:tr, :nitro.to_list(name)]),
       class: :td,
       body: [
-        panel(
+        NITRO.panel(
           class: :column66,
           body: t
         ),
-        panel(
+        NITRO.panel(
           class: :column10,
           body: type
         ),
-        panel(
+        NITRO.panel(
           class: :column10,
           body: :erlang.float_to_list(m * :math.pow(10, -s), [{:decimals, x}])
         )

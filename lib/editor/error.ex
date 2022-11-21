@@ -1,21 +1,22 @@
 defmodule PLM.Forms.Error do
-  use N2O, with: [:n2o, :nitro]
-  use FORM, with: [:form]
+  require N2O
+  require NITRO
+  require FORM
   require Logger
   require Record
 
   def doc(), do: "Error Form."
   def id(), do: {:error, [], "General Error", []}
 
-  def new(name, {:error, no, msg, body}) do
-    panel(
+  def new(name, {:error, no, msg, body}, _) do
+    NITRO.panel(
       class: :form,
       body: [
-        h4(body: "ERROR: " <> msg),
-        p(style: "margin: 20;", body: body),
-        panel(
+        NITRO.h4(body: "ERROR: " <> msg),
+        NITRO.p(style: "margin: 20;", body: body),
+        NITRO.panel(
           class: :buttons,
-          body: link(class: [:button, :sgreen], body: "Got it", id: name, postback: {:off, no})
+          body: NITRO.link(class: [:button, :sgreen], body: "Got it", id: name, postback: {:off, no})
         )
       ]
     )

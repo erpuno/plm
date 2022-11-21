@@ -1,7 +1,8 @@
 defmodule BPE.Rows.Trace do
-  use N2O, with: [:n2o, :kvs, :nitro]
-  use FORM, with: [:form]
-  use BPE
+  require N2O
+  require FORM
+  require NITRO
+  require BPE
   require Logger
 
   def doc(),
@@ -9,31 +10,31 @@ defmodule BPE.Rows.Trace do
       "This is the actor trace row (step) representation. " <>
         "Used to draw trace of the processes"
 
-  def id(), do: hist(task: {:task, :Init})
+  def id(), do: BPE.hist(task: {:task, :Init})
 
-  def new(name, h) do
+  def new(name, h, _) do
     task =
-      case hist(h, :task) do
-        [] -> hist(id(), :task)
+      case BPE.hist(h, :task) do
+        [] -> BPE.hist(id(), :task)
         x -> x
       end
 
-    docs = hist(h, :docs)
+    docs = BPE.hist(h, :docs)
 
-    panel(
-      id: FORM.atom([:tr, NITRO.to_list(name)]),
+    NITRO.panel(
+      id: :form.atom([:tr, :nitro.to_list(name)]),
       class: :td,
       body: [
-        panel(
+        NITRO.panel(
           class: :column6,
-          body: :io_lib.format("~s", [NITRO.to_list(:erlang.element(2, task))])
+          body: :io_lib.format("~s", [:nitro.to_list(:erlang.element(2, task))])
         ),
-        panel(
+        NITRO.panel(
           class: :column20,
           body:
             :string.join(
               :lists.map(
-                fn x -> NITRO.to_list([:erlang.element(1, x)]) end,
+                fn x -> :nitro.to_list([:erlang.element(1, x)]) end,
                 docs
               ),
               ', '

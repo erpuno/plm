@@ -1,31 +1,32 @@
 defmodule FIN.Index do
-  use N2O, with: [:n2o, :nitro]
-  use FORM, with: [:form]
-  use BPE
+  require N2O
+  require NITRO
+  require FORM
+  require BPE
   require KVS
   require ERP
   require Logger
 
   def accountsHeader() do
-    panel(
+    NITRO.panel(
       id: :header,
       class: :th,
       body: [
-        panel(class: :column33, body: "Account"),
-        panel(class: :column10, body: "Type"),
-        panel(class: :column2, body: "Ballance")
+        NITRO.panel(class: :column33, body: "Account"),
+        NITRO.panel(class: :column10, body: "Type"),
+        NITRO.panel(class: :column2, body: "Ballance")
       ]
     )
   end
 
   def txsHeader() do
-    panel(
+    NITRO.panel(
       id: :header,
       class: :th,
       body: [
-        panel(class: :column66, body: "Account"),
-        panel(class: :column10, body: "Amount"),
-        panel(class: :column10, body: "Datetime")
+        NITRO.panel(class: :column66, body: "Account"),
+        NITRO.panel(class: :column10, body: "Amount"),
+        NITRO.panel(class: :column10, body: "Datetime")
       ]
     )
   end
@@ -34,9 +35,9 @@ defmodule FIN.Index do
 
      account = ERP."Acc"(id: cn ++ '/local')
 
-     NITRO.insert_bottom(
+     :nitro.insert_bottom(
         :accountsRow,
-        FIN.Rows.Account.new(FORM.atom([:row, :account, cn]), account)
+        FIN.Rows.Account.new(:form.atom([:row, :account, cn]), account, [])
       )
 
      cn
@@ -45,9 +46,9 @@ defmodule FIN.Index do
   def pushTxs(cn) do
 
     for i <- :kvs.feed('/fin/tx/' ++ cn ++ '/local') do
-      NITRO.insert_bottom(
+      :nitro.insert_bottom(
         :txsRow,
-        FIN.Rows.Transaction.new(FORM.atom([:row, :transaction, cn]), i)
+        FIN.Rows.Transaction.new(:form.atom([:row, :transaction, cn]), i, [])
       )
     end
 
@@ -55,16 +56,16 @@ defmodule FIN.Index do
   end
 
   def event(:init) do
-    NITRO.clear(:frms)
-    NITRO.clear(:ctrl)
-    NITRO.clear(:accountsHead)
-    NITRO.clear(:accountsRow)
-    NITRO.clear(:txsHead)
-    NITRO.clear(:txsRow)
+    :nitro.clear(:frms)
+    :nitro.clear(:ctrl)
+    :nitro.clear(:accountsHead)
+    :nitro.clear(:accountsRow)
+    :nitro.clear(:txsHead)
+    :nitro.clear(:txsRow)
 
-    case N2O.user() do
+    case :n2o.user() do
       [] ->
-        NITRO.hide(:head)
+        :nitro.hide(:head)
 
         PLM.box(
           PLM.Forms.Error,
@@ -77,13 +78,13 @@ defmodule FIN.Index do
   end
 
   def event({:txs, id}) do
-    NITRO.insert_top(:accountsHead, FIN.Index.accountsHeader())
-    NITRO.insert_top(:txsHead, FIN.Index.txsHeader())
-    NITRO.update(:num, span(body: KVS.Index.parse(N2O.user())))
-    NITRO.hide(:frms)
+    :nitro.insert_top(:accountsHead, FIN.Index.accountsHeader())
+    :nitro.insert_top(:txsHead, FIN.Index.txsHeader())
+    :nitro.update(:num, NITRO.span(body: KVS.Index.parse(:n2o.user())))
+    :nitro.hide(:frms)
     id |> pushAccounts |> pushTxs
   end
 
-  def event({:off, _}), do: NITRO.redirect("ldap.htm")
+  def event({:off, _}), do: :nitro.redirect("ldap.htm")
   def event(_), do: []
 end

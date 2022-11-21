@@ -1,18 +1,19 @@
 defmodule LDAP.Forms.Access do
-  use N2O, with: [:n2o, :nitro]
-  use FORM, with: [:form]
+  require N2O
+  require NITRO
+  require FORM
   require Logger
   require Record
 
   def doc(), do: "Access."
-  def id(), do: {:access, N2O.user() |> KVS.Index.parse(), "to all services."}
+  def id(), do: {:access, :n2o.user() |> KVS.Index.parse(), "to all services."}
 
-  def new(name, {:access, _user, msg}) do
-    document(
-      name: FORM.atom([:otp, name]),
-      sections: [sec(name: "GRANTED: " <> msg)],
+  def new(name, {:access, _user, msg}, _) do
+    FORM.document(
+      name: :form.atom([:otp, name]),
+      sections: [FORM.sec(name: "GRANTED: " <> msg)],
       buttons: [
-        but(
+        FORM.but(
           id: :ok,
           name: :ok,
           title: "Revoke",
@@ -21,8 +22,7 @@ defmodule LDAP.Forms.Access do
         )
       ],
       fields: [
-        field(
-          pos: 2,
+        FORM.field(
           id: :cn,
           name: :cn,
           type: :string,

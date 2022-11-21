@@ -1,37 +1,38 @@
 defmodule BPE.Index do
   require Logger
-  use N2O, with: [:n2o, :kvs, :nitro]
-  use FORM
+  require N2O
+  require NITRO
+  require FORM
   require BPE
   require KVS
 
   def index_header() do
-    panel(
+    NITRO.panel(
       id: :header,
       class: :th,
       body: [
-        panel(class: :column6, body: "No"),
-        panel(class: :column10, body: "Name"),
-        panel(class: :column6, body: "Module"),
-        panel(class: :column20, body: "State"),
-        panel(class: :column20, body: "Documents"),
-        panel(class: :column20, body: "Manage")
+        NITRO.panel(class: :column6, body: "No"),
+        NITRO.panel(class: :column10, body: "Name"),
+        NITRO.panel(class: :column6, body: "Module"),
+        NITRO.panel(class: :column20, body: "State"),
+        NITRO.panel(class: :column20, body: "Documents"),
+        NITRO.panel(class: :column20, body: "Manage")
       ]
     )
   end
 
   def event(:init) do
-    NITRO.clear(:tableRow)
-    NITRO.clear(:tableHead)
-    NITRO.insert_top(:tableHead, index_header())
-    NITRO.clear(:frms)
-    NITRO.clear(:ctrl)
+    :nitro.clear(:tableRow)
+    :nitro.clear(:tableHead)
+    :nitro.insert_top(:tableHead, index_header())
+    :nitro.clear(:frms)
+    :nitro.clear(:ctrl)
     mod = BPE.Forms.Create
-    NITRO.insert_bottom(:frms, FORM.new(mod.new(mod, mod.id()), mod.id()))
+    :nitro.insert_bottom(:frms, :form.new(mod.new(mod, mod.id(), []), mod.id(), []))
 
-    NITRO.insert_bottom(
+    :nitro.insert_bottom(
       :ctrl,
-      link(
+      NITRO.link(
         id: :creator,
         body: "New Process",
         postback: :create,
@@ -39,30 +40,30 @@ defmodule BPE.Index do
       )
     )
 
-    NITRO.hide(:frms)
+    :nitro.hide(:frms)
 
     for BPE.process(id: i) <-
           Enum.filter(
-            KVS.feed('/bpe/proc'),
+            :kvs.feed('/bpe/proc'),
             fn BPE.process(name: n) -> n == :n2o.user() end
           ) do
-      NITRO.insert_bottom(:tableRow, BPE.Rows.Process.new(FORM.atom([:row, i]), :bpe.load(i)))
+      :nitro.insert_bottom(:tableRow, BPE.Rows.Process.new(:form.atom([:row, i]), :bpe.load(i), []))
     end
   end
 
   def event({:complete, id}) do
     p = :bpe.load(id)
     :bpe.start(p, [])
-    :bpe.complete(id)
+    :bpe.next(id)
 
-    NITRO.update(
-      FORM.atom([:tr, :row, id]),
-      BPE.Rows.Process.new(FORM.atom([:row, id]), :bpe.proc(id))
+    :nitro.update(
+      :form.atom([:tr, :row, id]),
+      BPE.Rows.Process.new(:form.atom([:row, id]), :bpe.proc(id), [])
     )
   end
 
   def event({:spawn, _}) do
-    atom = 'process_type_pi_Elixir.BPE.Forms.Create' |> NITRO.q() |> NITRO.to_atom()
+    atom = :process_type_pi_none |> :nitro.q() |> :nitro.to_atom
 
     id =
       case :bpe.start(atom.def(), []) do
@@ -70,16 +71,16 @@ defmodule BPE.Index do
         {:ok, i} -> i
       end
 
-    NITRO.insert_after(
+    :nitro.insert_after(
       :header,
-      BPE.Rows.Process.new(FORM.atom([:row, id]), :bpe.proc(id))
+      BPE.Rows.Process.new(:form.atom([:row, id]), :bpe.proc(id), [])
     )
 
-    NITRO.hide(:frms)
-    NITRO.show(:ctrl)
+    :nitro.hide(:frms)
+    :nitro.show(:ctrl)
   end
 
-  def event({:discard, []}), do: [NITRO.hide(:frms), NITRO.show(:ctrl)]
-  def event(:create), do: [NITRO.hide(:ctrl), NITRO.show(:frms)]
+  def event({:discard, []}), do: [:nitro.hide(:frms), :nitro.show(:ctrl)]
+  def event(:create), do: [:nitro.hide(:ctrl), :nitro.show(:frms)]
   def event(_), do: []
 end
