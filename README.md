@@ -27,13 +27,12 @@ Before running, [fullchain.pem](./priv/ssl/fullchain.pem) certificate has to be 
 
 ```
 $ mix deps.get
-$ mix compile
 $ mix release
 $ _build/dev/rel/plm/bin/plm daemon
 $ _build/dev/rel/plm/bin/plm remote
 ```
 
-Then open `https://localhost:8043/app/index.html`
+Then open `http://localhost:8043/app/plm.htm`
 
 Notes
 -----
