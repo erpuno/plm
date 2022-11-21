@@ -25,7 +25,7 @@ defmodule PLM.Mixfile do
   def application() do
     [
       mod: {PLM, []},
-      applications: [:syn, :form, :dec, :nitro, :ranch, :cowboy, :rocksdb, :kvs, :bpe, :n2o, :schema]
+      applications: [:syn, :form, :dec, :mnesia, :nitro, :ranch, :cowboy, :rocksdb, :kvs, :bpe, :n2o, :schema]
     ]
   end
 
