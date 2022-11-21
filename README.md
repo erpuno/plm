@@ -23,8 +23,6 @@ Prerequisites
 Run
 ---
 
-Before running, [fullchain.pem](./priv/ssl/fullchain.pem) certificate has to be added into a system.
-
 ```
 $ mix deps.get
 $ mix release
