@@ -24,8 +24,8 @@ defmodule PLM.Mixfile do
 
   def application() do
     [
-      mod: {PLM.Application, []},
-      applications: [:syn, :form, :schema, :dec, :nitro, :ranch, :cowboy, :rocksdb, :kvs, :bpe, :n2o]
+      mod: {PLM, []},
+      applications: [:syn, :form, :dec, :nitro, :ranch, :cowboy, :rocksdb, :kvs, :bpe, :n2o, :schema]
     ]
   end
 
@@ -39,7 +39,7 @@ defmodule PLM.Mixfile do
       {:bpe, "~> 7.11.0"},
       {:nitro, "~> 7.10.0"},
       {:form, "~> 7.10.0"},
-      {:schema, "~> 3.11.3"},
+      {:schema, "~> 3.11.4"},
       {:kvs, "~> 9.4.8"},
       {:n2o, "~> 9.11.1"}
     ]

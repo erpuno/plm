@@ -12,10 +12,10 @@ defmodule FIN.Rows.Transaction do
       "This is the transaction representation. " <>
         "Used to draw the account transactions"
 
-  def id(), do: ERP."Payment"(volume: {0, 1})
+  def id(), do: ERP."Payment"(volume: {:money, 0, 1})
 
   def new(name, ERP."Payment"(subaccount: acc, price: p, volume: v, from: tic, type: cur), _) do
-    {s, m} = :dec.mul(p, v)
+    {:money, s, m} = :dec.mul(p, v)
 
     x =
       case cur do

@@ -12,11 +12,11 @@ defmodule FIN.Rows.Account do
       "This is the transaction representation. " <>
         "Used to draw the account transactions"
 
-  def id(), do: ERP."Acc"(id: 'Anon/local', ballance: {0, 1})
+  def id(), do: ERP."Acc"(id: 'Anon/local', ballance: {:money, 0, 1})
 
   def new(name, ERP."Acc"(id: acc, ballance: p, rate: v, type: type), _) do
     [_,t] = :string.tokens(acc, '/')
-    {s, m} = :dec.mul(p, v)
+    {:money, s, m} = :dec.mul(p, v)
 
     x =
       case type do

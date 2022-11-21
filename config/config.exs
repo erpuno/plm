@@ -13,16 +13,15 @@ config :n2o,
   routes: PLM.Routes
 
 config :schema,
-  boot:  [:erp_boot, :acc_boot, :pay_boot, :fin_boot, :plm_boot]
+  boot:  [:erp_boot, :acc_boot, :fin_boot, :plm_boot, :pay_boot]
 
 config :kvs,
   dba: :kvs_rocks,
   dba_st: :kvs_st,
-  schema: [:kvs, :kvs_stream, :bpe_metainfo]
+  schema: [:kvs, :kvs_stream, :bpe_metainfo, :erp]
 
 config :form,
   registry: [
-    LDAP.Forms.Access,
     BPE.Pass,
     BPE.Forms.Create,
     BPE.Rows.Trace,

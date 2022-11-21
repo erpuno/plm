@@ -12,10 +12,10 @@ defmodule PLM.Rows.Investment do
       "This is the actor trace row (step) representation. " <>
         "Used to draw trace of the processes"
 
-  def id(), do: ERP."Payment"(volume: {0, 1})
+  def id(), do: ERP."Payment"(volume: {:money, 0, 1})
 
   def new(name, ERP."Payment"(price: p, volume: v, from: tic, type: cur), _) do
-    {s, m} = :dec.mul(p, v)
+    {:money, s, m} = :dec.mul(p, v)
 
     x =
       case cur do

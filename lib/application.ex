@@ -1,4 +1,5 @@
 defmodule PLM do
+  use Application
   require N2O
   require FORM
 
@@ -13,14 +14,11 @@ defmodule PLM do
 
     :nitro.insert_bottom(:stand, :form.new(mod.new(mod, rec, []), rec, []))
   end
-end
-
-defmodule PLM.Application do
-  use Application
 
   def start(_, _) do
     :cowboy.start_clear(:http, [{:port, :application.get_env(:n2o, :port, 8043)}],
                                        %{env: %{dispatch: :n2o_cowboy.points()}})
+    :erp.boot
     Supervisor.start_link([], strategy: :one_for_one, name: PLM.Supervisor)
   end
 end
